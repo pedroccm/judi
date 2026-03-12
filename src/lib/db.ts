@@ -1,7 +1,21 @@
 import Database from "better-sqlite3";
 import path from "path";
+import fs from "fs";
 
-const DB_PATH = path.join(process.cwd(), "data", "tributario_tjsp.db");
+function findDb(): string {
+  const candidates = [
+    path.join(process.cwd(), "data", "tributario_tjsp.db"),
+    path.join(__dirname, "..", "..", "data", "tributario_tjsp.db"),
+    path.join(__dirname, "..", "data", "tributario_tjsp.db"),
+    path.join(__dirname, "data", "tributario_tjsp.db"),
+  ];
+  for (const p of candidates) {
+    if (fs.existsSync(p)) return p;
+  }
+  return candidates[0];
+}
+
+const DB_PATH = findDb();
 
 let _db: Database.Database | null = null;
 
