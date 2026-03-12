@@ -47,6 +47,7 @@ export interface Processo {
   partes_json: string;
   sentenca_texto: string;
   esaj_extraido: number;
+  pdfs_json: string;
 }
 
 export interface JuizStats {

@@ -1,7 +1,9 @@
 import { getProcesso } from "@/lib/db";
 import { buildEsajUrl } from "@/lib/esaj-url";
 import { notFound } from "next/navigation";
-import { ArrowLeft, ExternalLink, FileText, Users } from "lucide-react";
+import { ArrowLeft, ExternalLink, FileText, Users, File } from "lucide-react";
+
+const R2_BASE = "https://pub-ab6b3c8d346b45e5bd8c07a045a67614.r2.dev";
 
 export default async function ProcessoPage({
   params,
@@ -15,6 +17,9 @@ export default async function ProcessoPage({
   if (!processo) notFound();
 
   const partes = processo.partes_json ? JSON.parse(processo.partes_json) : [];
+  const pdfs: { key: string; name: string }[] = (processo as Record<string, unknown>).pdfs_json
+    ? JSON.parse((processo as Record<string, unknown>).pdfs_json as string)
+    : [];
 
   const infoItems = [
     { label: "Classe", value: processo.classe_nome },
@@ -101,6 +106,36 @@ export default async function ProcessoPage({
                     </div>
                   ))}
                 </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Documentos */}
+      {pdfs.length > 0 && (
+        <div className="mt-8">
+          <div className="flex items-center gap-2">
+            <File className="h-4 w-4 text-muted-foreground" />
+            <h2 className="text-lg font-semibold">
+              Documentos
+              <span className="ml-2 text-sm font-normal text-muted-foreground">{pdfs.length} PDFs</span>
+            </h2>
+          </div>
+          <div className="mt-3 overflow-hidden rounded-xl border border-border shadow-sm">
+            <div className="divide-y divide-border/50">
+              {pdfs.map((pdf, i) => (
+                <a
+                  key={i}
+                  href={`${R2_BASE}/${encodeURI(pdf.key)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-3 px-5 py-3 text-sm no-underline transition-colors hover:bg-muted/40"
+                >
+                  <FileText className="h-4 w-4 shrink-0 text-red-500" />
+                  <span className="font-medium text-foreground">{pdf.name}</span>
+                  <ExternalLink className="ml-auto h-3.5 w-3.5 shrink-0 text-muted-foreground" />
+                </a>
               ))}
             </div>
           </div>
