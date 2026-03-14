@@ -17,8 +17,8 @@ export default async function ProcessoPage({
   if (!processo) notFound();
 
   const partes = processo.partes_json ? JSON.parse(processo.partes_json) : [];
-  const pdfs: { key: string; name: string }[] = (processo as Record<string, unknown>).pdfs_json
-    ? JSON.parse((processo as Record<string, unknown>).pdfs_json as string)
+  const pdfs: { key: string; name: string }[] = processo.pdfs_json
+    ? JSON.parse(processo.pdfs_json)
     : [];
 
   const infoItems = [
