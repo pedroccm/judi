@@ -1,7 +1,7 @@
 import { getJuizStats, getProcessosByJuiz } from "@/lib/db";
 import { buildEsajUrl } from "@/lib/esaj-url";
 import { notFound } from "next/navigation";
-import { ArrowLeft, Scale, FileText, BookOpen, ChevronLeft, ChevronRight, ExternalLink } from "lucide-react";
+import { ArrowLeft, Scale, FileText, BookOpen, ChevronLeft, ChevronRight, ExternalLink, Paperclip } from "lucide-react";
 
 export default async function JuizPage({
   params,
@@ -105,6 +105,7 @@ export default async function JuizPage({
                   <th className="px-4 py-3 text-right text-xs font-medium uppercase tracking-wide text-muted-foreground">Valor</th>
                   <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wide text-muted-foreground">Data</th>
                   <th className="px-4 py-3 text-center text-xs font-medium uppercase tracking-wide text-muted-foreground">Sentenca</th>
+                  <th className="px-4 py-3 text-center text-xs font-medium uppercase tracking-wide text-muted-foreground">PDFs</th>
                   <th className="px-4 py-3 text-center text-xs font-medium uppercase tracking-wide text-muted-foreground">e-SAJ</th>
                 </tr>
               </thead>
@@ -127,6 +128,18 @@ export default async function JuizPage({
                         ) : (
                           <span className="inline-flex items-center rounded-full bg-amber-50 px-2 py-0.5 text-xs font-medium text-amber-700">Sim</span>
                         )
+                      ) : (
+                        <span className="text-xs text-muted-foreground">&mdash;</span>
+                      )}
+                    </td>
+                    <td className="px-4 py-3 text-center">
+                      {p.pdfs_json && p.pdfs_json !== "[]" && p.pdfs_json !== "" ? (
+                        <a href={`/processo/${encodeURIComponent(p.numero)}`} className="inline-flex items-center gap-1 no-underline" title="Ver PDFs">
+                          <Paperclip className="h-3.5 w-3.5 text-blue-500" />
+                          <span className="text-xs tabular-nums text-blue-500">
+                            {JSON.parse(p.pdfs_json).length}
+                          </span>
+                        </a>
                       ) : (
                         <span className="text-xs text-muted-foreground">&mdash;</span>
                       )}
